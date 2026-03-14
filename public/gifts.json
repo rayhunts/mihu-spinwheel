@@ -1,0 +1,52 @@
+{
+  "gifts": [
+    {
+      "id": 1,
+      "name": "Rp 2.000",
+      "color": "#06b6d4",
+      "emoji": "💵"
+    },
+    {
+      "id": 2,
+      "name": "Rp 5.000",
+      "color": "#10b981",
+      "emoji": "💵"
+    },
+    {
+      "id": 3,
+      "name": "Rp 10.000",
+      "color": "#10b981",
+      "emoji": "💵"
+    },
+    {
+      "id": 4,
+      "name": "Rp 20.000",
+      "color": "#8b5cf6",
+      "emoji": "💵"
+    },
+    {
+      "id": 5,
+      "name": "Rp 50.000",
+      "color": "#ec4899",
+      "emoji": "💵"
+    },
+    {
+      "id": 6,
+      "name": "Rp 100.000",
+      "color": "#f59e0b",
+      "emoji": "💵"
+    },
+    {
+      "id": 7,
+      "name": "Hadiah Misterius",
+      "color": "#d97706",
+      "emoji": "🎁"
+    }
+  ],
+  "mysterygift": {
+    "id": 7,
+    "name": "Hadiah Misterius",
+    "color": "#d97706",
+    "emoji": "🎁"
+  }
+}

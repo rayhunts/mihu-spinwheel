@@ -21,7 +21,7 @@ interface SpinWheelProps {
 export function SpinWheel({ gifts, mysteryGift, onResult, isSpinning, playerName }: SpinWheelProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rotationRef = useRef(0);
-  const animationIdRef = useRef<number>();
+  const animationIdRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -86,13 +86,13 @@ export function SpinWheel({ gifts, mysteryGift, onResult, isSpinning, playerName
       ctx.stroke();
 
       // Draw pointer (triangle at top)
-      const pointerX = centerX;
-      const pointerY = 20;
+      const pointerX = centerX + radius;
+      const pointerY = centerY;
       const pointerSize = 15;
 
       ctx.beginPath();
-      ctx.moveTo(pointerX, pointerY);
-      ctx.lineTo(pointerX - pointerSize, pointerY + pointerSize);
+      ctx.moveTo(pointerX - pointerSize, pointerY);
+      ctx.lineTo(pointerX + pointerSize, pointerY - pointerSize);
       ctx.lineTo(pointerX + pointerSize, pointerY + pointerSize);
       ctx.closePath();
       ctx.fillStyle = '#ef4444';
@@ -202,13 +202,13 @@ export function SpinWheel({ gifts, mysteryGift, onResult, isSpinning, playerName
           ctx.lineWidth = 3;
           ctx.stroke();
 
-          const pointerX = centerX;
-          const pointerY = 20;
+          const pointerX = centerX + radius;
+          const pointerY = centerY;
           const pointerSize = 15;
 
           ctx.beginPath();
-          ctx.moveTo(pointerX, pointerY);
-          ctx.lineTo(pointerX - pointerSize, pointerY + pointerSize);
+          ctx.moveTo(pointerX - pointerSize, pointerY);
+          ctx.lineTo(pointerX + pointerSize, pointerY - pointerSize);
           ctx.lineTo(pointerX + pointerSize, pointerY + pointerSize);
           ctx.closePath();
           ctx.fillStyle = '#ef4444';

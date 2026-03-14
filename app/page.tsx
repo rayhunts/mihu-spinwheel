@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { SpinWheel } from '@/components/spin-wheel';
 import { WelcomeScreen } from '@/components/welcome-screen';
 import { HistoryDisplay } from '@/components/history-display';
+import { FloatingDecorations } from '@/components/confetti';
 
 interface Gift {
   id: number;
@@ -30,7 +31,6 @@ export default function Home() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [showResult, setShowResult] = useState(false);
 
-  // Load gifts and history from localStorage
   useEffect(() => {
     const loadGifts = async () => {
       try {
@@ -60,7 +60,6 @@ export default function Home() {
     loadHistory();
   }, []);
 
-  // Save history to localStorage whenever it changes
   useEffect(() => {
     if (history.length > 0) {
       localStorage.setItem('thrMihuHistory', JSON.stringify(history));
@@ -100,21 +99,28 @@ export default function Home() {
 
   if (!gifts.length || !mysteryGift) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-accent/10 to-secondary/10 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-amber-50 bg-pattern flex items-center justify-center p-4">
         <div className="text-center">
-          <div className="text-6xl mb-4">🎡</div>
-          <p className="text-xl font-semibold text-foreground">Memuat...</p>
+          <div className="text-6xl mb-4 animate-spin-slow">☪</div>
+          <p className="text-xl font-semibold text-emerald-700">Memuat...</p>
         </div>
+        <style jsx>{`
+          @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+          .animate-spin-slow {
+            animation: spin-slow 8s linear infinite;
+          }
+        `}</style>
       </div>
     );
   }
 
-  // Show welcome screen if no player is selected
   if (!currentPlayerName) {
     return <WelcomeScreen onStartGame={handleStartGame} history={history} />;
   }
 
-  // Show result/history if spin is complete
   if (showResult) {
     const lastEntry = history[history.length - 1];
     return (
@@ -126,32 +132,34 @@ export default function Home() {
     );
   }
 
-  // Show game screen
   return (
-    <main className="min-h-screen bg-gradient-to-br from-background via-accent/10 to-secondary/10 py-8">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl md:text-6xl font-bold mb-2">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
-              🎡 THR MIHU
-            </span>
-          </h1>
-          <p className="text-lg text-muted-foreground">
+    <main className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-amber-50 bg-pattern relative overflow-hidden">
+      <FloatingDecorations />
+      
+      <div className="container mx-auto px-4 py-8 relative z-10">
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <span className="text-4xl animate-float">☪</span>
+            <h1 className="text-4xl md:text-5xl font-bold">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-700 via-emerald-600 to-amber-500">
+                THR MIHU
+              </span>
+            </h1>
+            <span className="text-4xl animate-float-delayed">✦</span>
+          </div>
+          <p className="text-emerald-600/80 font-medium text-lg">
             Putar roda untuk memenangkan hadiah!
           </p>
         </div>
 
         <div className="space-y-8">
-          {/* Current Player Info */}
           <div className="text-center">
-            <p className="text-gray-600 mb-2">Peserta</p>
-            <h2 className="text-4xl font-bold text-primary">
+            <p className="text-emerald-600/70 mb-2 font-medium">Peserta</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-emerald-800 bg-gradient-to-r from-emerald-700 to-amber-600 bg-clip-text text-transparent">
               {currentPlayerName}
             </h2>
           </div>
 
-          {/* Wheel */}
           <div className="flex justify-center">
             <SpinWheel
               gifts={gifts}

@@ -1,14 +1,23 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Playfair_Display, Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const playfair = Playfair_Display({ 
+  subsets: ["latin"],
+  variable: '--font-display',
+  display: 'swap'
+});
+
+const inter = Inter({ 
+  subsets: ["latin"],
+  variable: '--font-body',
+  display: 'swap'
+});
 
 export const metadata: Metadata = {
-  title: 'Gift Spin Wheel - Group Gift Game',
-  description: 'Spin the wheel to randomly select gifts for your group. Perfect for parties, team events, and celebrations!',
+  title: 'THR MIHU - Spin Wheel Game',
+  description: 'Putar roda untuk memenangkan hadiah THR!',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -35,7 +44,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="id" className={`${playfair.variable} ${inter.variable}`}>
       <body className="font-sans antialiased">
         {children}
         <Analytics />

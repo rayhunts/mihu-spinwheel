@@ -7,7 +7,7 @@ interface SoundType {
   setMuted: (muted: boolean) => void;
 }
 
-export function useSound(): { click: SoundType; spin: SoundType; win: SoundType; muted: boolean; toggleMute: () => void } {
+export function useSound(): { click: SoundType; spin: SoundType; win: SoundType; muted: boolean; toggleMute: () => void; playTick: () => void; playWin: () => void; playCountdown: () => void } {
   const mutedRef = useRef(false);
   const audioContextRef = useRef<AudioContext | null>(null);
 
@@ -79,5 +79,23 @@ export function useSound(): { click: SoundType; spin: SoundType; win: SoundType;
     mutedRef.current = !mutedRef.current;
   }, []);
 
-  return { click, spin, win, muted: mutedRef.current, toggleMute };
+  const playTick = useCallback(() => {
+    if (mutedRef.current) return;
+    playTone(800, 0.05, 'sine');
+  }, [playTone]);
+
+  const playWin = useCallback(() => {
+    if (mutedRef.current) return;
+    const notes = [523, 659, 784, 1047];
+    notes.forEach((freq, i) => {
+      setTimeout(() => playTone(freq, 0.3, 'sine'), i * 150);
+    });
+  }, [playTone]);
+
+  const playCountdown = useCallback(() => {
+    if (mutedRef.current) return;
+    playTone(440, 0.15, 'sine');
+  }, [playTone]);
+
+  return { click, spin, win, muted: mutedRef.current, toggleMute, playTick, playWin, playCountdown };
 }

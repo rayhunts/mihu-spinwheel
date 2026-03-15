@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { SpinWheel } from '@/components/spin-wheel';
 import { WelcomeScreen } from '@/components/welcome-screen';
-import { HistoryDisplay } from '@/components/history-display';
+import { PrizeDisplay } from '@/components/prize-display';
 import { FloatingDecorations } from '@/components/confetti';
 
 interface Gift {
@@ -66,6 +66,11 @@ export default function Home() {
     }
   }, [history]);
 
+  const resetHistory = () => {
+    setHistory([]);
+    localStorage.removeItem('thrMihuHistory');
+  };
+
   const handleStartGame = (playerName: string) => {
     setCurrentPlayerName(playerName);
     setShowResult(false);
@@ -87,11 +92,6 @@ export default function Home() {
     setShowResult(true);
   };
 
-  const handlePlayAgain = () => {
-    setCurrentPlayerName('');
-    setShowResult(false);
-  };
-
   const handleAddNewPlayer = () => {
     setCurrentPlayerName('');
     setShowResult(false);
@@ -99,10 +99,10 @@ export default function Home() {
 
   if (!gifts.length || !mysteryGift) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-amber-50 bg-pattern flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-emerald-50 to-amber-50 bg-pattern flex items-center justify-center p-4">
         <div className="text-center">
           <div className="text-6xl mb-4 animate-spin-slow">☪</div>
-          <p className="text-xl font-semibold text-emerald-700">Memuat...</p>
+          <p className="text-xl font-semibold text-emerald-600">Memuat...</p>
         </div>
         <style jsx>{`
           @keyframes spin-slow {
@@ -118,49 +118,47 @@ export default function Home() {
   }
 
   if (!currentPlayerName) {
-    return <WelcomeScreen onStartGame={handleStartGame} history={history} />;
+    return <WelcomeScreen onStartGame={handleStartGame} history={history} resetHistory={resetHistory} />;
   }
 
   if (showResult) {
-    const lastEntry = history[history.length - 1];
+    const lastEntry = history.at(-1);
     return (
-      <HistoryDisplay
+      <PrizeDisplay
         history={[lastEntry]}
-        onPlayAgain={handlePlayAgain}
         onAddNewPlayer={handleAddNewPlayer}
+        resetHistory={resetHistory}
       />
     );
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-amber-50 bg-pattern relative overflow-hidden">
+    <main className="min-h-screen bg-gradient-to-br from-emerald-100 via-emerald-50 to-amber-50 bg-pattern relative overflow-hidden">
       <FloatingDecorations />
       
-      <div className="container mx-auto px-4 py-8 relative z-10">
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <span className="text-4xl animate-float">☪</span>
-            <h1 className="text-4xl md:text-5xl font-bold">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-700 via-emerald-600 to-amber-500">
-                THR MIHU
-              </span>
+      <div className="container mx-auto px-4 py-12 relative z-10">
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-4 mb-3">
+            <span className="text-5xl animate-float">☪</span>
+            <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-amber-400">
+              THR MIHU
             </h1>
-            <span className="text-4xl animate-float-delayed">✦</span>
+            <span className="text-5xl animate-float-delayed">✦</span>
           </div>
-          <p className="text-emerald-600/80 font-medium text-lg">
-            Putar roda untuk memenangkan hadiah!
+          <p className="text-emerald-600/70 font-medium text-lg mt-2">
+            Ayo putar roda untuk dapat THR!
           </p>
         </div>
 
-        <div className="space-y-8">
+        <div className="space-y-10">
           <div className="text-center">
-            <p className="text-emerald-600/70 mb-2 font-medium">Peserta</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-emerald-800 bg-gradient-to-r from-emerald-700 to-amber-600 bg-clip-text text-transparent">
+            <p className="text-emerald-600/60 mb-3 font-medium text-lg">Peserta</p>
+            <h2 className="text-4xl md:text-6xl font-bold text-emerald-800 bg-linear-to-r from-emerald-600 to-amber-500 bg-clip-text">
               {currentPlayerName}
             </h2>
           </div>
 
-          <div className="flex justify-center">
+          <div className="flex justify-center mt-8">
             <SpinWheel
               gifts={gifts}
               mysteryGift={mysteryGift}

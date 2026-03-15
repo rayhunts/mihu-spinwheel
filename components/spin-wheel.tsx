@@ -266,17 +266,17 @@ export function SpinWheel({ gifts, onResult, isSpinning, playerName }: SpinWheel
   const performSpin = useCallback(() => {
     const spinDuration = 6000;
     const rotations = 6;
-    
+
     let fakeTargetIndex = 0;
     let actualTargetIndex = 0;
-    
+
     if (playerName.trim().startsWith('Pak') || playerName.trim().startsWith('pak')) {
       const misteriusIndex = gifts.findIndex(gift => gift.name === 'Hadiah Misterius');
-      
+
       const fakePrizeIndices = gifts
         .map((gift, index) => ({ gift, index }))
         .filter(item => item.gift.name === 'Rp 2.000');
-      
+
       if (fakePrizeIndices.length > 0 && misteriusIndex !== -1) {
         actualTargetIndex = misteriusIndex;
         fakeTargetIndex = fakePrizeIndices[0].index;
@@ -288,7 +288,7 @@ export function SpinWheel({ gifts, onResult, isSpinning, playerName }: SpinWheel
       const smallPrizeIndices = gifts
         .map((gift, index) => ({ gift, index }))
         .filter(item => item.gift.name === 'Rp 5.000' || item.gift.name === 'Rp 10.000');
-      
+
       if (smallPrizeIndices.length > 0) {
         const selectedPrize = smallPrizeIndices[Math.floor(Math.random() * smallPrizeIndices.length)];
         actualTargetIndex = selectedPrize.index;
@@ -298,37 +298,37 @@ export function SpinWheel({ gifts, onResult, isSpinning, playerName }: SpinWheel
         fakeTargetIndex = 1;
       }
     }
-    
+
     const sliceAngle = (Math.PI * 2) / gifts.length;
     let fakeRotation = rotations * Math.PI * 2 + (Math.PI * 2 - (fakeTargetIndex * sliceAngle + sliceAngle / 2));
     let actualRotation = rotations * Math.PI * 2 + (Math.PI * 2 - (actualTargetIndex * sliceAngle + sliceAngle / 2));
-    
+
     if (actualRotation <= fakeRotation) {
       actualRotation += Math.PI * 2;
     }
-    
+
     const startTime = Date.now();
     const startRotation = rotationRef.current;
-    
+
     if (navigator.vibrate) {
       navigator.vibrate(50);
     }
     spinSound.play();
 
     let hasPlayedFakeOutSound = false;
-    
+
     const animate = () => {
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / spinDuration, 1);
-      
+
       let currentRotation: number;
-      
+
       if (fakeTargetIndex === actualTargetIndex) {
         const easeProgress = 1 - Math.pow(1 - progress, 3);
         currentRotation = startRotation + (fakeRotation - startRotation) * easeProgress;
       } else {
         const reachFakePoint = 0.55;
-        
+
         if (progress < reachFakePoint) {
           const phaseProgress = progress / reachFakePoint;
           const easeProgress = 1 - Math.pow(1 - phaseProgress, 2.5);
@@ -337,7 +337,7 @@ export function SpinWheel({ gifts, onResult, isSpinning, playerName }: SpinWheel
           const moveProgress = (progress - reachFakePoint) / (1 - reachFakePoint);
           const moveEase = moveProgress;
           currentRotation = fakeRotation + (actualRotation - fakeRotation) * moveEase;
-          
+
           if (moveProgress > 0.1 && moveProgress < 0.5 && !hasPlayedFakeOutSound) {
             hasPlayedFakeOutSound = true;
             if (navigator.vibrate) {
@@ -427,7 +427,7 @@ export function SpinWheel({ gifts, onResult, isSpinning, playerName }: SpinWheel
             height={400}
             className="w-[320px] sm:w-[380px] md:w-[450px] aspect-square rounded-full"
           />
-          
+
           {/* Pointer arrow - kept from thr-spinner */}
           <div className="absolute top-1/2 right-[-12px] sm:right-[-24px] transform -translate-y-1/2 z-10">
             <div className="relative">
@@ -488,7 +488,7 @@ export function SpinWheel({ gifts, onResult, isSpinning, playerName }: SpinWheel
           className={`relative px-10 sm:px-14 py-5 sm:py-6 rounded-full font-bold text-lg sm:text-xl transition-all overflow-hidden touch-manipulation shadow-xl border-2 ${isSpinning || showCountdown || isRevealing
             ? 'bg-gray-300 text-gray-500 cursor-not-allowed border-gray-400'
             : 'bg-gradient-to-r from-emerald-600 to-emerald-700 text-white hover:from-emerald-500 hover:to-emerald-600 active:from-emerald-700 active:to-emerald-800 border-emerald-800 hover:border-emerald-600 hover:shadow-2xl active:scale-95'
-          }`}
+            }`}
         >
           <span className="relative z-10 flex items-center gap-3">
             <MoonIcon className="w-6 h-6 text-amber-300" />

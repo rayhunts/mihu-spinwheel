@@ -13,7 +13,6 @@ interface Gift {
 
 interface SpinWheelProps {
   gifts: Gift[];
-  mysteryGift: Gift;
   onResult: (gift: Gift, playerName: string) => void;
   isSpinning: boolean;
   playerName: string;
@@ -75,7 +74,7 @@ export function IslamicPattern({ className }: { className?: string }) {
   );
 }
 
-export function SpinWheel({ gifts, mysteryGift, onResult, isSpinning, playerName }: SpinWheelProps) {
+export function SpinWheel({ gifts, onResult, isSpinning, playerName }: SpinWheelProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rotationRef = useRef(0);
   const animationIdRef = useRef<number | undefined>(undefined);
@@ -274,42 +273,29 @@ export function SpinWheel({ gifts, mysteryGift, onResult, isSpinning, playerName
     if (playerName.trim().startsWith('Pak') || playerName.trim().startsWith('pak')) {
       const misteriusIndex = gifts.findIndex(gift => gift.name === 'Hadiah Misterius');
       
-      const smallPrizeIndices = gifts
+      const fakePrizeIndices = gifts
         .map((gift, index) => ({ gift, index }))
         .filter(item => item.gift.name === 'Rp 2.000');
       
-      if (smallPrizeIndices.length > 0) {
-        const randomSmall = smallPrizeIndices[Math.floor(Math.random() * smallPrizeIndices.length)];
-        actualTargetIndex = randomSmall.index;
-        fakeTargetIndex = (actualTargetIndex - 1 + gifts.length) % gifts.length;
+      if (fakePrizeIndices.length > 0 && misteriusIndex !== -1) {
+        actualTargetIndex = misteriusIndex;
+        fakeTargetIndex = fakePrizeIndices[0].index;
       } else {
         actualTargetIndex = misteriusIndex !== -1 ? misteriusIndex : 0;
-        fakeTargetIndex = (actualTargetIndex - 1 + gifts.length) % gifts.length;
+        fakeTargetIndex = (actualTargetIndex + 1) % gifts.length;
       }
     } else {
       const smallPrizeIndices = gifts
         .map((gift, index) => ({ gift, index }))
         .filter(item => item.gift.name === 'Rp 5.000' || item.gift.name === 'Rp 10.000');
       
-      const hundredkIndices = gifts
-        .map((gift, index) => ({ gift, index }))
-        .filter(item => item.gift.name === 'Rp 100.000');
-      
       if (smallPrizeIndices.length > 0) {
         const selectedPrize = smallPrizeIndices[Math.floor(Math.random() * smallPrizeIndices.length)];
         actualTargetIndex = selectedPrize.index;
-        fakeTargetIndex = (actualTargetIndex - 1 + gifts.length) % gifts.length;
-        
-        if (hundredkIndices.length > 0) {
-          const matchingFake = hundredkIndices.find(h => h.index === fakeTargetIndex);
-          if (!matchingFake) {
-            const randomHundredk = hundredkIndices[Math.floor(Math.random() * hundredkIndices.length)];
-            fakeTargetIndex = randomHundredk.index;
-          }
-        }
+        fakeTargetIndex = (actualTargetIndex + 1) % gifts.length;
       } else {
         actualTargetIndex = 0;
-        fakeTargetIndex = gifts.length - 1;
+        fakeTargetIndex = 1;
       }
     }
     

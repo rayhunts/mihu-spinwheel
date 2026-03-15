@@ -25,7 +25,6 @@ interface HistoryEntry {
 
 export default function Home() {
   const [gifts, setGifts] = useState<Gift[]>([]);
-  const [mysteryGift, setMysteryGift] = useState<Gift | null>(null);
   const [currentPlayerName, setCurrentPlayerName] = useState('');
   const [isSpinning, setIsSpinning] = useState(false);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
@@ -36,10 +35,7 @@ export default function Home() {
       try {
         const response = await fetch('/gifts.json');
         const data = await response.json();
-        setGifts(data.gifts);
-        if (data.mysterygift) {
-          setMysteryGift(data.mysterygift);
-        }
+        setGifts(data);
       } catch (error) {
         console.error('Failed to load gifts:', error);
       }
@@ -97,7 +93,7 @@ export default function Home() {
     setShowResult(false);
   };
 
-  if (!gifts.length || !mysteryGift) {
+  if (!gifts.length) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-emerald-50 to-amber-50 bg-pattern flex items-center justify-center p-4">
         <div className="text-center">
@@ -123,6 +119,7 @@ export default function Home() {
 
   if (showResult) {
     const lastEntry = history.at(-1);
+    if (!lastEntry) return null;
     return (
       <PrizeDisplay
         history={[lastEntry]}
@@ -161,7 +158,6 @@ export default function Home() {
           <div className="flex justify-center mt-8">
             <SpinWheel
               gifts={gifts}
-              mysteryGift={mysteryGift}
               onResult={handleSpinResult}
               isSpinning={isSpinning}
               playerName={currentPlayerName}
